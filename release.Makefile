@@ -31,7 +31,8 @@ BUILD_DIR      ?= ./build
 
 all: dapboot-bluepill.bin \
      dapboot-maplemini.bin \
-     dapboot-stlink.bin
+     dapboot-stlink.bin \
+     dapboot-nkpro.bin
 
 clean:
 	$(Q)$(RM) $(BUILD_DIR)/*.bin
@@ -58,4 +59,10 @@ dapboot-maplemini.bin: | $(BUILD_DIR)
 	@printf "  BUILD $(@)\n"
 	$(Q)$(MAKE) TARGET=MAPLEMINI -C src/ clean
 	$(Q)$(MAKE) TARGET=MAPLEMINI -C src/
+	$(Q)cp src/dapboot.bin $(BUILD_DIR)/$(@)
+
+dapboot-nkpro.bin: | $(BUILD_DIR)
+	@printf "  BUILD $(@)\n"
+	$(Q)$(MAKE) TARGET=NKPRO -C src/ clean
+	$(Q)$(MAKE) TARGET=NKPRO -C src/
 	$(Q)cp src/dapboot.bin $(BUILD_DIR)/$(@)
