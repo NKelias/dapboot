@@ -29,18 +29,13 @@
 #define LED_GPIO_PIN  GPIO0
 #define LED_OPEN_DRAIN 0
 
-/* Technically, there is a button on PB8, but the button is
-   also shorted to BOOT0, so it's not very useful for us to
-   sample PB8 on boot, since pulling it high will already
-   trigger the ROM serial bootloader and prevent us from
-   running anyways. */
 #define HAVE_BUTTON 0
 
 #define USE_HSI 1
 #define HAVE_USB_PULLUP_CONTROL 1
 #define USB_PULLUP_GPIO_PORT GPIOA
 #define USB_PULLUP_GPIO_PIN  GPIO15
-#define USB_PULLUP_ACTIVE_HIGH 0
+#define USB_PULLUP_ACTIVE_HIGH 1
 #define USB_PULLUP_OPEN_DRAIN 0
 
 #define USES_GPIOA 1
