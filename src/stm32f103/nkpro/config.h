@@ -31,7 +31,7 @@
 
 #define HAVE_BUTTON 0
 
-#define USE_HSI 1
+// #define USE_HSI 1
 #define HAVE_USB_PULLUP_CONTROL 1
 #define USB_PULLUP_GPIO_PORT GPIOA
 #define USB_PULLUP_GPIO_PIN  GPIO15
@@ -40,6 +40,6 @@
 
 #define USES_GPIOA 1
 #define USES_GPIOB 1
-#define USES_GPIOC 0
+#define USES_GPIOC 1
 
 #endif
