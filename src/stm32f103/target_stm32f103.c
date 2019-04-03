@@ -30,11 +30,7 @@
 #include "backup.h"
 
 #ifndef USES_GPIOA
-#if (HAVE_USB_PULLUP_CONTROL == 0)
-#define USES_GPIOA 1
-#else
 #define USES_GPIOA 0
-#endif
 #endif
 
 #ifndef USES_GPIOB
