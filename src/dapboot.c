@@ -18,6 +18,9 @@
 
 #include <string.h>
 #include <libopencm3/cm3/vector.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/timer.h>
 
 #include "dapboot.h"
 #include "target.h"
@@ -65,7 +68,7 @@ int main(void) {
     /* Initialize GPIO/LEDs if needed */
     target_gpio_setup();
 
-    if (target_get_force_bootloader() || !validate_application()) {
+    /* if (target_get_force_bootloader() || !validate_application()) {*/
         /* Setup USB */
         {
             char serial[USB_SERIAL_NUM_LENGTH+1];
@@ -76,15 +79,15 @@ int main(void) {
 
         usbd_device* usbd_dev = usb_setup();
         dfu_setup(usbd_dev, &target_manifest_app, NULL, NULL);
-        webusb_setup(usbd_dev);
-        winusb_setup(usbd_dev);
+        /* webusb_setup(usbd_dev);*/
+        /* winusb_setup(usbd_dev);*/
         
         while (1) {
             usbd_poll(usbd_dev);
         }
-    } else {
-        jump_to_application();
-    }
+    /* } else {*/
+        /* jump_to_application();*/
+    /* }*/
     
     return 0;
 }
