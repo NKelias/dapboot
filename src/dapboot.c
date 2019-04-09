@@ -19,6 +19,7 @@
 #include <string.h>
 #include <libopencm3/cm3/vector.h>
 #include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/rcc.h>
 
 #include "dapboot.h"
 #include "target.h"
@@ -64,24 +65,36 @@ int main(void) {
     target_clock_setup();
 
     /* Initialize GPIO/LEDs if needed */
-    target_gpio_setup();
+    /* target_gpio_setup();*/
+    rcc_periph_clock_enable(RCC_GPIOA);
+
+    gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO15);
+    gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO7);
+    gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO9 | GPIO10 | GPIO11 | GPIO12);
+    /* gpio_set(GPIOA, GPIO15);*/
+
+    // Strobe USB_EN and LED indefinitely
+    for(;;) {
+        gpio_toggle(GPIOA, GPIO15);
+        gpio_toggle(GPIOA, GPIO7);
+
+        // Super unscientific ~1sec. delay loop
+        volatile uint32_t i = 5000000;
+        while(i--);
+    }
 
     /* Setup USB */
     {
         char serial[USB_SERIAL_NUM_LENGTH+1];
         serial[0] = '\0';
-        /* target_get_serial_number(serial, USB_SERIAL_NUM_LENGTH);*/
+        target_get_serial_number(serial, USB_SERIAL_NUM_LENGTH);
         usb_set_serial_number(serial);
     }
 
     usbd_device* usbd_dev = usb_setup();
 
     //Manually set and pull up USB+
-    /* gpio_*/
-    gpio_set(GPIOA, GPIO15);
 
-    // Turn on LED, because why not...
-    gpio_set(GPIOB, GPIO0);
 
     dfu_setup(usbd_dev, &target_manifest_app, NULL, NULL);
     /* webusb_setup(usbd_dev);*/
