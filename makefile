@@ -35,7 +35,10 @@ clean:
 	$(Q)$(RM) $(BUILD_DIR)/*.bin
 	$(Q)$(MAKE) -C src/ clean
 
-.PHONY = all clean
+flash: dapboot-nkpro.bin
+	$(Q)st-flash write $(BUILD_DIR)/$< 0x8000000 
+
+.PHONY = all clean flash
 
 $(BUILD_DIR):
 	$(Q)mkdir -p $(BUILD_DIR)
@@ -45,3 +48,4 @@ dapboot-nkpro.bin: | $(BUILD_DIR)
 	$(Q)$(MAKE) TARGET=NKPRO -C src/ clean
 	$(Q)$(MAKE) TARGET=NKPRO -C src/
 	$(Q)cp src/dapboot.bin $(BUILD_DIR)/$(@)
+

@@ -19,6 +19,7 @@
 #include <string.h>
 #include <libopencm3/cm3/vector.h>
 #include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/rcc.h>
 
 #include "dapboot.h"
 #include "target.h"
@@ -43,7 +44,7 @@ static void jump_to_application(void) __attribute__ ((noreturn));
 
 static void jump_to_application(void) {
     vector_table_t* app_vector_table = (vector_table_t*)APP_BASE_ADDRESS;
-    
+
     /* Use the application's vector table */
     target_relocate_vector_table();
 
@@ -55,7 +56,7 @@ static void jump_to_application(void) {
 
     /* Jump to the application entry point */
     app_vector_table->reset();
-    
+
     while (1);
 }
 
@@ -66,30 +67,28 @@ int main(void) {
     /* Initialize GPIO/LEDs if needed */
     target_gpio_setup();
 
-    /* Setup USB */
-    {
-        char serial[USB_SERIAL_NUM_LENGTH+1];
-        serial[0] = '\0';
-        /* target_get_serial_number(serial, USB_SERIAL_NUM_LENGTH);*/
-        usb_set_serial_number(serial);
+    if (target_get_force_bootloader() || !validate_application()) {
+        /* Setup USB */
+
+        {
+            char serial[USB_SERIAL_NUM_LENGTH+1];
+            serial[0] = '\0';
+            target_get_serial_number(serial, USB_SERIAL_NUM_LENGTH);
+            usb_set_serial_number(serial);
+        }
+
+        usbd_device* usbd_dev = usb_setup();
+
+        dfu_setup(usbd_dev, &target_manifest_app, NULL, NULL);
+        /* webusb_setup(usbd_dev);*/
+        winusb_setup(usbd_dev);
+
+        while (1) {
+            usbd_poll(usbd_dev);
+        }
+    } else {
+        jump_to_application();
     }
 
-    usbd_device* usbd_dev = usb_setup();
-
-    //Manually set and pull up USB+
-    /* gpio_*/
-    gpio_set(GPIOA, GPIO15);
-
-    // Turn on LED, because why not...
-    gpio_set(GPIOB, GPIO0);
-
-    dfu_setup(usbd_dev, &target_manifest_app, NULL, NULL);
-    /* webusb_setup(usbd_dev);*/
-    /* winusb_setup(usbd_dev);*/
-    
-    while (1) {
-        usbd_poll(usbd_dev);
-    }
-    
     return 0;
 }

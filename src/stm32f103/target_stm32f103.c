@@ -102,6 +102,13 @@ void target_gpio_setup(void) {
 #endif
 
 #if HAVE_USB_PULLUP_CONTROL
+        rcc_periph_clock_enable(RCC_AFIO);
+        AFIO_MAPR |= AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON;
+
+        /* gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO15);*/
+        /* gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO7);*/
+        /* gpio_set(GPIOA, GPIO15);*/
+
     {
         const uint8_t mode = GPIO_MODE_OUTPUT_10_MHZ;
         const uint8_t conf = (USB_PULLUP_OPEN_DRAIN ? GPIO_CNF_OUTPUT_OPENDRAIN
