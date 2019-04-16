@@ -35,18 +35,11 @@ int main(void) {
     // Strobe USB_EN and LED indefinitely
     for(;;) {
         /* gpio_toggle(GPIOA, GPIO7 | GPIO15);*/
-        GPIOA_BRR |= (1 << 15) | (1 << 7);
+        GPIOA_ODR ^= (1 << 15) | (1 << 7);
 
         // Super unscientific ~1sec. delay loop
         volatile uint32_t i = 5000000;
         while(i--);
-
-        /* gpio_toggle(GPIOA, GPIO7 | GPIO15);*/
-        GPIOA_BSRR |= (1 << 15) | (1 << 7);
-
-        // Super unscientific ~1sec. delay loop
-        volatile uint32_t j = 1000000;
-        while(j--);
     }
 
 }
