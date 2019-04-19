@@ -16,30 +16,21 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/rcc.h>
+#ifndef DFU_H_INCLUDED
+#define DFU_H_INCLUDED
 
+#include <libopencm3/usb/usbd.h>
+#include <libopencm3/usb/dfu.h>
 
+extern const struct usb_dfu_descriptor dfu_function;
 
-int main(void) {
-    rcc_clock_setup_in_hsi_out_48mhz();
-    rcc_periph_clock_enable(RCC_GPIOA);
+typedef void (*GenericCallback)(void);
+typedef void (*StateChangeCallback)(enum dfu_state);
+typedef void (*StatusChangeCallback)(enum dfu_status);
 
-    gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_10_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO7 | GPIO15);
-    /* GPIOA_CRH &= ~(0b1111 << 28);*/
-    /* GPIOA_CRH |= (0b0011 << 28);*/
+extern void dfu_setup(usbd_device* usbd_dev,
+                      GenericCallback on_detach_request,
+                      StateChangeCallback on_state_change,
+                      StatusChangeCallback on_status_change);
 
-    /* GPIOA_CRL &= ~(0b1111 << 28);*/
-    /* GPIOA_CRL |= (0b0011 << 28);*/
-
-    // Strobe USB_EN and LED indefinitely
-    for(;;) {
-        gpio_toggle(GPIOA, GPIO7 | GPIO15);
-        /* GPIOA_ODR ^= (1 << 15) | (1 << 7);*/
-
-        // Super unscientific ~1sec. delay loop
-        volatile uint32_t i = 5000000;
-        while(i--);
-    }
-
-}
+#endif

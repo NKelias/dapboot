@@ -16,30 +16,15 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/rcc.h>
+#ifndef WINUSB_H_INCLUDED
+#define WINUSB_H_INCLUDED
 
+#include "winusb_defs.h"
 
+/* Arbitrary, but must be equivalent to the last character in
+   the special OS descriptor string */
+#define WINUSB_MS_VENDOR_CODE 0x21
 
-int main(void) {
-    rcc_clock_setup_in_hsi_out_48mhz();
-    rcc_periph_clock_enable(RCC_GPIOA);
+extern void winusb_setup(usbd_device* usbd_dev);
 
-    gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_10_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO7 | GPIO15);
-    /* GPIOA_CRH &= ~(0b1111 << 28);*/
-    /* GPIOA_CRH |= (0b0011 << 28);*/
-
-    /* GPIOA_CRL &= ~(0b1111 << 28);*/
-    /* GPIOA_CRL |= (0b0011 << 28);*/
-
-    // Strobe USB_EN and LED indefinitely
-    for(;;) {
-        gpio_toggle(GPIOA, GPIO7 | GPIO15);
-        /* GPIOA_ODR ^= (1 << 15) | (1 << 7);*/
-
-        // Super unscientific ~1sec. delay loop
-        volatile uint32_t i = 5000000;
-        while(i--);
-    }
-
-}
+#endif

@@ -20,32 +20,48 @@
 # For normal development, use the Makefile in the src/ directory.
 
 # Be silent per default, but 'make V=1' will show all compiler calls.
-ifneq ($(V),1)
-Q              := @
-NULL           := 2>/dev/null
-MAKE           := $(MAKE) --no-print-directory
-endif
-export V
+# ifneq ($(V),1)
+# Q              := @
+# NULL           := 2>/dev/null
+# MAKE           := $(MAKE) --no-print-directory
+# endif
+# export V
 
-BUILD_DIR      ?= ./build
+# BUILD_DIR      ?= ./build
 
-all: dapboot-nkpro.bin
+# all: dapboot-nkpro.bin
 
-clean:
-	$(Q)$(RM) $(BUILD_DIR)/*.bin
-	$(Q)$(MAKE) -C src/ clean
+# clean:
+#     $(Q)$(RM) $(BUILD_DIR)/*.bin
+#     $(Q)$(MAKE) -C src/ clean
 
-flash: dapboot-nkpro.bin
-	$(Q)st-flash write $(BUILD_DIR)/$< 0x8000000 
+# flash: dapboot-nkpro.bin
+#     $(Q)st-flash write $(BUILD_DIR)/$< 0x8000000 
 
-.PHONY = all clean flash
+# .PHONY = all clean flash
+
+# dapboot-nkpro.bin: | $(BUILD_DIR)
+#     @printf "  BUILD $(@)\n"
+#     $(Q)$(MAKE) TARGET=NKPRO -C src/ clean
+#     $(Q)$(MAKE) TARGET=NKPRO -C src/
+#     $(Q)cp src/dapboot.bin $(BUILD_DIR)/$(@)
+
+PROJECT = nkboot
+BUILD_DIR = build
+
+CFILES = src/main.c
+
+# TODO - you will need to edit these two lines!
+DEVICE=stm32f103tb
+OOCD_FILE = board/stm32f4discovery.cfg
+
+# You shouldn't have to edit anything below here.
+INCLUDES += -Iinclude
+OPENCM3_DIR= libopencm3
+
+include $(OPENCM3_DIR)/mk/genlink-config.mk
+include rules.mk
+include $(OPENCM3_DIR)/mk/genlink-rules.mk
 
 $(BUILD_DIR):
 	$(Q)mkdir -p $(BUILD_DIR)
-
-dapboot-nkpro.bin: | $(BUILD_DIR)
-	@printf "  BUILD $(@)\n"
-	$(Q)$(MAKE) TARGET=NKPRO -C src/ clean
-	$(Q)$(MAKE) TARGET=NKPRO -C src/
-	$(Q)cp src/dapboot.bin $(BUILD_DIR)/$(@)
-

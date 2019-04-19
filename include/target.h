@@ -16,30 +16,25 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/rcc.h>
+#ifndef TARGET_H_INCLUDED
+#define TARGET_H_INCLUDED
 
+#include <stdlib.h>
+#include <stdint.h>
+#include <libopencm3/usb/usbd.h>
 
+extern void target_clock_setup(void);
+extern void target_gpio_setup(void);
+extern const usbd_driver* target_usb_init(void);
+extern bool target_get_force_bootloader(void);
+extern void target_get_serial_number(char* dest, size_t max_chars);
+extern size_t target_get_max_firmware_size(void);
+extern void target_log(const char* str);
+extern void target_relocate_vector_table(void);
+extern void target_manifest_app(void);
+extern void target_flash_unlock(void);
+extern void target_flash_lock(void);
+extern bool target_flash_program_array(uint16_t* dest, const uint16_t* data, size_t half_word_count);
 
-int main(void) {
-    rcc_clock_setup_in_hsi_out_48mhz();
-    rcc_periph_clock_enable(RCC_GPIOA);
-
-    gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_10_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO7 | GPIO15);
-    /* GPIOA_CRH &= ~(0b1111 << 28);*/
-    /* GPIOA_CRH |= (0b0011 << 28);*/
-
-    /* GPIOA_CRL &= ~(0b1111 << 28);*/
-    /* GPIOA_CRL |= (0b0011 << 28);*/
-
-    // Strobe USB_EN and LED indefinitely
-    for(;;) {
-        gpio_toggle(GPIOA, GPIO7 | GPIO15);
-        /* GPIOA_ODR ^= (1 << 15) | (1 << 7);*/
-
-        // Super unscientific ~1sec. delay loop
-        volatile uint32_t i = 5000000;
-        while(i--);
-    }
-
-}
+extern void target_pre_main(void);
+#endif
