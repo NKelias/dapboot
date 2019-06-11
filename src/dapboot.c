@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include <libopencm3/cm3/vector.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/rcc.h>
 
 #include "dapboot.h"
 #include "target.h"
