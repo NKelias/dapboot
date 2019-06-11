@@ -26,7 +26,7 @@
 
 #define FLASH_SIZE_OVERRIDE 0x20000
 
-#define DEVELOP
+// #define DEVELOP
 
 #define HAVE_LED 1
 #define LED_GPIO_PORT GPIOB
