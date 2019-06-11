@@ -21,6 +21,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <libopencm3/cm3/scb.h>
+#include <libopencm3/stm32/gpio.h>
+#include "stm32f103/nkpro/config.h"
+
+
 
 void target_get_serial_number(char* dest, size_t max_chars) __attribute__((weak));
 void target_log(const char* str) __attribute__((weak));
@@ -44,5 +48,7 @@ void target_manifest_app(void) {
 
 void target_pre_main(void)
 {
-
+#ifdef DEVELOP
+    gpio_clear(GPIOA, GPIO15);
+#endif
 }

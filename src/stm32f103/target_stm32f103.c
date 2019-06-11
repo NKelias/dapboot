@@ -153,6 +153,9 @@ const usbd_driver* target_usb_init(void) {
 }
 
 bool target_get_force_bootloader(void) {
+#ifdef DEVELOP
+    return true;
+#else
     bool force = false;
     /* Check the RTC backup register */
     uint32_t cmd = backup_read(BKP0);
@@ -174,9 +177,10 @@ bool target_get_force_bootloader(void) {
             force = true;
         }
     }
-#endif
+#endif // HAVE_BUTTON
 
     return force;
+#endif // DEVELOP
 }
 
 void target_get_serial_number(char* dest, size_t max_chars) {

@@ -27,7 +27,7 @@
 #include "dfu.h"
 #include "webusb.h"
 #include "winusb.h"
-#include "config.h"
+#include "stm32f103/nkpro/config.h"
 
 static inline void __set_MSP(uint32_t topOfMainStack) {
     asm("msr msp, %0" : : "r" (topOfMainStack));
@@ -78,8 +78,11 @@ int main(void) {
         }
 
         usbd_device* usbd_dev = usb_setup();
-
+#ifdef DEVELOP
+        dfu_setup(usbd_dev, &jump_to_application, NULL, NULL);
+#else
         dfu_setup(usbd_dev, &target_manifest_app, NULL, NULL);
+#endif
         /* webusb_setup(usbd_dev);*/
         winusb_setup(usbd_dev);
 

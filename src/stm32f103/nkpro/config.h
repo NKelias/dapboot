@@ -21,10 +21,12 @@
 
 #define APP_BASE_ADDRESS 0x08002000
 #define FLASH_PAGE_SIZE  1024
-#define DFU_UPLOAD_AVAILABLE 1
+#define DFU_UPLOAD_AVAILABLE 0
 #define DFU_DOWNLOAD_AVAILABLE 1
 
 #define FLASH_SIZE_OVERRIDE 0x20000
+
+#define DEVELOP
 
 #define HAVE_LED 1
 #define LED_GPIO_PORT GPIOB
@@ -42,6 +44,6 @@
 
 #define USES_GPIOA 1
 #define USES_GPIOB 1
-#define USES_GPIOC 1
+#define USES_GPIOC 0
 
 #endif

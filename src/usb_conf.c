@@ -97,10 +97,10 @@ static const struct usb_bos_descriptor bos = {
 static char serial_number[USB_SERIAL_NUM_LENGTH+1];
 
 static const char *usb_strings[] = {
-    "Nitrokey",
-    "NKPro DFU Bootloader",
+    "Devanarchy",
+    "DAPBoot DFU Bootloader",
     serial_number,
-    "NKPro DFU"
+    "DAPBoot DFU"
 };
 
 /* Buffer to be used for control requests. */
